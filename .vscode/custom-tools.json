@@ -1,0 +1,86 @@
+{
+    "statusbar": [
+        {
+            "text": "$(check)",
+            "tooltip": "List Files",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "listdir"
+                }
+            ]
+        },
+        {
+            "text": "$(trashcan)",
+            "tooltip": "Clean",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "clean"
+                }
+            ]
+        },
+        {
+            "text": "$(flame)",
+            "tooltip": "Build",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "build"
+                }
+            ]
+        },
+        {
+            "text": "$(play)",
+            "tooltip": "Run",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "runFile"
+                }
+            ]
+        },
+        {
+            "text": "$(plug)",
+            "tooltip": "Serial Monitor",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "monitor"
+                }
+            ]
+        },
+        {
+            "text": "$(arrow-down)",
+            "tooltip": "Upload File",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "uploadFile"
+                }
+            ]
+        },
+        {
+            "text": "$(arrow-right)",
+            "tooltip": "Upload",
+            "confirmation": "Do you want to proceed?",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "upload"
+                }
+            ]
+        },
+        {
+            "text": "$(cloud)",
+            "tooltip": "Publish",
+            "confirmation": "Do you want to proceed?",
+            "commands": [
+                {
+                    "id": "workbench.action.tasks.runTask",
+                    "args": "publish"
+                }
+            ]
+        }
+    ]
+}

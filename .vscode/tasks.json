@@ -1,0 +1,77 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "rm -rf dist release",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "python tools/build.py",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "publish",
+            "type": "shell",
+            "command": "python tools/git_publish.py",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "upload",
+            "type": "shell",
+            "command": "rshell -p ${config:serial_port} -b ${config:serial_speed} rsync -am ./dist /pyboard",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "runFile",
+            "type": "shell",
+            "command": "ampy --port ${config:serial_port} --baud ${config:serial_speed} run ${file}",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "listdir",
+            "type": "shell",
+            "command": "ampy --port ${config:serial_port} --baud ${config:serial_speed} ls",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "monitor",
+            "type": "shell",
+            "command": "python -m serial.tools.miniterm --raw ${config:serial_port} ${config:serial_speed}",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "uploadFile",
+            "type": "shell",
+            "command": "ampy --port ${config:serial_port} --baud ${config:serial_speed} put ${file}",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "gitReset",
+            "type": "shell",
+            "command": "python tools/git_reset.py",
+            "problemMatcher": [
+            ]
+        },
+        {
+            "label": "deviceReset",
+            "type": "shell",
+            "command": "rshell -p ${config:serial_port} -b ${config:serial_speed} rm -rf /pyboard/*",
+            "problemMatcher": [
+            ]
+        }
+    ]
+}
