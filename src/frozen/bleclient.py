@@ -100,33 +100,39 @@ class BLEClient:
         elif event == _IRQ_PERIPHERAL_CONNECT:
             # Connect successful.
             conn_handle, addr_type, addr = data
+            # print("_IRQ_PERIPHERAL_CONNECT", conn_handle, ['%02X' % a for a in addr])
             self._conn_handle = conn_handle
             self._ble.gattc_discover_services(conn_handle)
 
         elif event == _IRQ_PERIPHERAL_DISCONNECT:
             # Disconnect (either initiated by us or the remote end).
             conn_handle, addr_type, addr = data
+            # print("_IRQ_PERIPHERAL_DISCONNECT", conn_handle, ['%02X' % a for a in addr])
             self._reset()
 
         elif event == _IRQ_GATTC_SERVICE_RESULT:
             conn_handle, start_handle, end_handle, uuid = data
-            #print("_IRQ_GATTC_SERVICE_RESULT", uuid, '%02X' % start_handle, '%02X' % end_handle)
+            # print("_IRQ_GATTC_SERVICE_RESULT", conn_handle, uuid, '%02X' % start_handle, '%02X' % end_handle)
             self._services.append(BLEService(self._ble, bluetooth.UUID(uuid), self._conn_handle, start_handle, end_handle))
 
         elif event == _IRQ_GATTC_SERVICE_DONE:
-            #print("_IRQ_GATTC_SERVICE_DONE", self._services)
-            self._ble.gattc_discover_characteristics(self._conn_handle, 0x1, 0xFFFF)
+            conn_handle, status = data
+            # print("_IRQ_GATTC_SERVICE_DONE", conn_handle, status)
+            if status == 0:
+                self._ble.gattc_discover_characteristics(self._conn_handle, 0x1, 0xFFFF)
 
         elif event == _IRQ_GATTC_CHARACTERISTIC_RESULT:
             conn_handle, end_handle, value_handle, properties, uuid = data
-            #print("_IRQ_GATTC_CHARACTERISTIC_RESULT", uuid, end_handle, value_handle, properties)
+            # print("_IRQ_GATTC_CHARACTERISTIC_RESULT", uuid, end_handle, value_handle, properties)
             for svc in self._services:
                 if svc.has_handle(value_handle):
                     svc.append_characteristic(BLECharacteristic(svc, bluetooth.UUID(uuid), value_handle))
                     break
 
         elif event == _IRQ_GATTC_CHARACTERISTIC_DONE:
-            self._discovery_done = True
+            conn_handle, status = data
+            # print("_IRQ_GATTC_CHARACTERISTIC_DONE", conn_handle, status)
+            self._discovery_done = status == 0
 
         elif event == _IRQ_GATTC_NOTIFY:
             conn_handle, value_handle, notify_data = data
@@ -148,7 +154,7 @@ class BLEClient:
         t = time.time()
         if active:
             while not self.is_connected() and (time.time()-t) < scan_timeout:
-                time.sleep_ms(100)
+                time.sleep_ms(500)
             return self.is_connected()
         return None
     

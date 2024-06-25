@@ -53,9 +53,9 @@ class BMSInfoRequest:
 
 class BMSInfo:
     # VoltPolska 100/150Ah battery BMS BLEInfo
-    _ENV_BMS_SERVICE_UUID = "0000ff00-0000-1000-8000-00805f9b34fb"
-    _ENV_BMS_SERVICE_RX_UUID = "0000ff01-0000-1000-8000-00805f9b34fb"
-    _ENV_BMS_SERVICE_TX_UUID = "0000ff02-0000-1000-8000-00805f9b34fb"
+    _ENV_BMS_SERVICE_UUID = 0xff00 #"0000ff00-0000-1000-8000-00805f9b34fb"
+    _ENV_BMS_SERVICE_RX_UUID = 0xff01 #"0000ff01-0000-1000-8000-00805f9b34fb"
+    _ENV_BMS_SERVICE_TX_UUID = 0xff02 #"0000ff02-0000-1000-8000-00805f9b34fb"
 
     _ENV_BMS_BASIC_INFO_REQ = [0xdd, 0xa5, 0x3, 0x0, 0xff, 0xfd, 0x77]
     _ENV_BMS_CELLS_INFO_REQ = [0xdd, 0xa5, 0x4, 0x0, 0xff, 0xfc, 0x77]
@@ -96,16 +96,20 @@ class BMSInfo:
         return False
 
 
-    def connect_by_address(self, address, type = 0):
+    def connect_by_address(self, address, type = 0, timeout=5000):
         self._client = BLEClient()
-        if self._client.connect(address, type):
+        if self._client.connect(address, type, timeout):
             svc = self._client.get_service(BMSInfo._ENV_BMS_SERVICE_UUID)
             if svc != None:
                 tx = svc.get_characteristic(BMSInfo._ENV_BMS_SERVICE_TX_UUID)
                 if tx != None:
                     self._req = BMSInfoRequest(tx)
                     self._client.on_notify(lambda _, data: self._req.process(data))
-                return True
+                    return True
+                else:
+                    print("ERR: TX characteristics not found:", BMSInfo._ENV_BMS_SERVICE_TX_UUID)
+            else:
+                print("ERR: Service not found", BMSInfo._ENV_BMS_SERVICE_UUID)
         return False
 
     def disconnect(self):

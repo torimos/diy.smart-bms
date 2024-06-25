@@ -4,7 +4,7 @@ from bmsinfo import BMSInfo
 from machine import Pin
 
 TARGET = "E3:67:8D:DA:79:FA"
-#TARGET = "30:AE:A4:DC:CD:B2"
+#TARGET = "30:AE:A4:DC:CD:B2" # fake
 
 CHARGE_TIMEOUT_SEC = 2 * 60 * 60
 SYNC_INTERVAL = 10
@@ -35,7 +35,7 @@ while(True):
         break
     
     if ((time.time()-syncTime) > SYNC_INTERVAL):
-        print("Sync...")
+        print("Sync in progress...")
         try:
             led.value(1)
             if bms_info.connect_by_address(TARGET):
@@ -50,7 +50,8 @@ while(True):
             else:
                 print("Sync Failed - No Device")
                 blink(10, 0.1)
-        except:
+        except OSError as err:
+            print("ERR", err)
             blink(3, 0.5)
             pass
         led.value(0)
