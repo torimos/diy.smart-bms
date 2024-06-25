@@ -7,7 +7,7 @@ TARGET = "E3:67:8D:DA:79:FA"
 #TARGET = "30:AE:A4:DC:CD:B2" # fake
 
 CHARGE_TIMEOUT_SEC = 2 * 60 * 60
-SYNC_INTERVAL = 10
+SYNC_INTERVAL = 30
 
 led = Pin(2, Pin.OUT)
 relay = Pin(33, Pin.OUT)
