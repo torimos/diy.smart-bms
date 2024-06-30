@@ -3,8 +3,8 @@ import gc
 from bmsinfo import BMSInfo
 from machine import Pin
 
-TARGET = "E3:67:8D:DA:79:FA"
-#TARGET = "30:AE:A4:DC:CD:B2" # fake
+#TARGET = "E3:67:8D:DA:79:FA"
+TARGET = "30:AE:A4:DC:CD:B2" # fake
 
 CHARGE_TIMEOUT_SEC = 2 * 60 * 60
 SYNC_INTERVAL = 30
