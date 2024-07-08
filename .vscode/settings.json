@@ -1,0 +1,4 @@
+{
+    "serial_port": "/dev/ttyUSB0",
+    "serial_speed": 115200
+}
