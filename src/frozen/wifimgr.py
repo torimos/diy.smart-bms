@@ -21,7 +21,7 @@ def set_dhcp_host_name(name):
     global host_name
     host_name = name
 
-def get_connection():
+def get_connection(allow_open = False):
 
     """return a working WLAN(STA_IF) instance or None"""
 
@@ -54,7 +54,7 @@ def get_connection():
                     connected = do_connect(ssid, password)
                 else:
                     print("skipping unknown encrypted network")
-            else:  # open
+            elif allow_open:  # open
                 connected = do_connect(ssid, None)
             if connected:
                 break

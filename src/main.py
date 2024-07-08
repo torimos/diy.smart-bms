@@ -2,6 +2,7 @@ import time
 import gc
 import wifimgr
 import ota
+import machine
 
 from bmsinfo import BMSInfo
 from machine import Pin
@@ -25,7 +26,7 @@ statTime = time.time()
 syncTime = -SYNC_INTERVAL
 
 def wifi_init():
-    wlan = wifimgr.get_connection()
+    wlan = wifimgr.get_connection(True)
     if wlan is None:
         print("Could not initialize the network connection.")
         while True:
@@ -69,32 +70,37 @@ def connect():
     return False
 
 
-print("WIFI Init")
-wifi_init()
-print("Starting OTA Update")
-ota.ota_update()
+try:
+    print("WIFI Init")
+    wifi_init()
+    print("Starting OTA Update")
+    ota.ota_update()
 
-while(True):
-    if ((time.time()-statTime) > CHARGE_TIMEOUT_SEC):
-        print("Charge timeout has been reached!")
-        enable_charging(False)
-        break
-    
-    if ((time.time()-syncTime) > SYNC_INTERVAL):
-        print("Sync in progress...")
-        try:
-            led.value(1)
-            if retry(connect, 3) == False:
-                print("Failed to connect - device not available")
-                blink(10, 0.1)
-        except OSError as err:
-            print("ERR", err)
-            blink(3, 0.5)
-            pass
-        led.value(0)
-        gc.collect()
-        syncTime = time.time()
+    while(True):
+        if ((time.time()-statTime) > CHARGE_TIMEOUT_SEC):
+            print("Charge timeout has been reached!")
+            enable_charging(False)
+            break
         
-    time.sleep(0.2)
+        if ((time.time()-syncTime) > SYNC_INTERVAL):
+            print("Sync in progress...")
+            try:
+                led.value(1)
+                if retry(connect, 3) == False:
+                    print("Failed to connect - device not available")
+                    blink(10, 0.1)
+            except OSError as err:
+                print("ERR", err)
+                blink(3, 0.5)
+                pass
+            led.value(0)
+            gc.collect()
+            syncTime = time.time()
+            
+        time.sleep(0.2)
 
-print("Charge control rutine finished. Restart device .")
+    print("Charge control rutine finished. Restart device .")
+
+except OSError as err:
+    print("Hard failure. Going to restarting.", err)
+    machine.soft_reset()
