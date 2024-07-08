@@ -140,6 +140,7 @@ class BMSInfo:
                 self.cells_count = data[21]
                 self.num_temp = data[22]
                 self.temperatures = [0] * self.num_temp
+                self.cells_voltage = [0.0] * self.cells_count
 
                 for i in range(self.num_temp):
                     self.temperatures[i] = (float(_two_ints_into16(data[23 + i * 2], data[23 + i * 2 + 1])) - 2731) / 10.0
@@ -147,8 +148,6 @@ class BMSInfo:
                 if resp2 != None:
                     data = resp2[4:]
                     num_cells = resp2[3] // 2
-                    self.cells_voltage = [0.0] * num_cells
-
                     for i in range(num_cells):
                         high_byte = data[i * 2]
                         low_byte = data[i * 2 + 1]
