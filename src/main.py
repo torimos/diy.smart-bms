@@ -26,7 +26,7 @@ statTime = time.time()
 syncTime = -SYNC_INTERVAL
 
 def wifi_init():
-    wlan = wifimgr.get_connection(True)
+    wlan = wifimgr.get_connection()
     if wlan is None:
         print("Could not initialize the network connection.")
         while True:
